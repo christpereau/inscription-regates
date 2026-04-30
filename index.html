@@ -12,7 +12,8 @@
   --text:#ddeaf7;--muted:#6a8fad;--border:#1e3a55;--r:10px
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Source Sans 3",sans-serif;background:var(--deep);color:var(--text);min-height:100vh}
+html{height:100%}
+body{font-family:"Source Sans 3",sans-serif;background:var(--deep);color:var(--text);min-height:100vh;height:100%}
 body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 120% 60% at 20% 80%,rgba(30,74,117,.18) 0%,transparent 60%);pointer-events:none;z-index:0}
 
 /* ── HEADER ── */
@@ -26,8 +27,8 @@ header{position:sticky;top:0;z-index:100;background:rgba(11,29,48,.96);backdrop-
 .main-tab.active{background:var(--oar);color:#fff}
 
 /* ── WRAP ── */
-.wrap{position:relative;z-index:1;padding:16px 13px 80px}
-.page{display:none}.page.active{display:block}
+.wrap{z-index:1;padding:16px 13px 80px;min-height:calc(100vh - 60px)}
+.page{display:none}
 
 /* ── LOADING BAR ── */
 .lbar{height:3px;background:linear-gradient(90deg,var(--oar),var(--spray));border-radius:2px;animation:lb 1.4s infinite;margin-bottom:14px;display:none}
@@ -114,15 +115,61 @@ select option{background:var(--hull)}
 
 .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:10px;align-items:center}
 .ld{width:13px;height:13px;border-radius:3px;flex-shrink:0;border:1px solid transparent}
+
+/* ══════════════════════════════════
+   PAGE 3 – BATEAUX / RÉSUMÉ
+══════════════════════════════════ */
+.resume-layout{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
+@media(max-width:900px){.resume-layout{grid-template-columns:1fr}}
+
+.comp-block{background:var(--navy);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.comp-block-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--hull)}
+.comp-block-title{font-family:"Playfair Display",serif;font-size:15px;font-weight:700;flex:1}
+.comp-block-date{font-size:10px;color:var(--muted)}
+
+.assign-select{background:var(--hull);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:11px;padding:3px 6px;outline:none;width:100%;-webkit-appearance:none;font-family:"Source Sans 3",sans-serif}
+.assign-select:focus{border-color:var(--oar)}
+.assign-select option{background:var(--hull)}
+
+/* Sidebar summary */
+.summary-side{background:var(--navy);border:1px solid var(--border);border-radius:var(--r);padding:14px;position:sticky;top:74px}
+.sum-side-title{font-family:"Playfair Display",serif;font-size:15px;font-weight:700;color:var(--gold);margin-bottom:12px}
+.sum-side-section{margin-bottom:12px}
+.sum-side-head{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--border)}
+.sum-side-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px;border-bottom:1px solid rgba(30,58,85,.2)}
+.sum-side-row:last-child{border-bottom:none}
+.sum-badge{background:rgba(46,108,164,.2);border:1px solid rgba(46,108,164,.4);color:var(--spray);border-radius:10px;font-size:10px;font-weight:700;padding:1px 7px}
+.sum-badge.warn{background:rgba(224,92,58,.15);border-color:rgba(224,92,58,.4);color:var(--coral)}
+
+/* ══════════════════════════════════
+   PAGE 4 – IMPORT PDF
+══════════════════════════════════ */
+.import-zone{border:2px dashed var(--border);border-radius:var(--r);padding:40px 20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px;background:var(--navy)}
+.import-zone:hover,.import-zone.drag{border-color:var(--oar);background:rgba(46,108,164,.05)}
+.import-icon{font-size:40px;margin-bottom:10px}
+.import-title{font-family:"Playfair Display",serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.import-sub{font-size:12px;color:var(--muted)}
+
+.import-result{background:var(--navy);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;display:none}
+.import-result.show{display:block}
+.parsed-course-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;margin-bottom:3px;font-size:12px;background:var(--hull);border:1px solid var(--border)}
+.parsed-course-row input[type=checkbox]{accent-color:var(--oar);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.parsed-num{font-weight:800;color:var(--spray);min-width:45px}
+.parsed-time{color:var(--gold);min-width:55px;font-size:11px}
+.parsed-label{flex:1}
+.parsed-dist{color:var(--muted);font-size:10px;min-width:45px;text-align:right}
+.import-comp-head{font-family:"Playfair Display",serif;font-size:14px;font-weight:700;color:var(--text);margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">R.C.N.D.<small>Régates 2026</small></div>
-  <div class="main-tabs">
-    <button class="main-tab active" onclick="setPage('presences')">&#128100; Présences</button>
-    <button class="main-tab" onclick="setPage('inscriptions')">&#128203; Inscriptions</button>
+  <div class="main-tabs" id="mainTabs">
+    <button class="main-tab active" data-page="presences">&#128100; Pr&#233;sences</button>
+    <button class="main-tab" data-page="inscriptions">&#128203; Inscriptions</button>
+    <button class="main-tab" data-page="bateaux">&#9973; Bateaux</button>
+    <button class="main-tab" data-page="import">&#128196; Import PDF</button>
   </div>
   <button class="btn bgold" style="margin-left:6px" onclick="exportCSV()">&#8595; CSV</button>
 </header>
@@ -131,7 +178,7 @@ select option{background:var(--hull)}
 <div class="lbar" id="lb"></div>
 
 <!-- ══ PAGE 1 : PRÉSENCES ══ -->
-<div class="page active" id="page-presences">
+<div class="page" id="page-presences" style="display:block">
   <div class="ptitle">Présences aux Régates</div>
   <div class="psubt">Cochez les jours de présence de chaque rameur. Les inscriptions aux courses éligibles sont mises à jour automatiquement.</div>
   <div class="rowers-grid" id="rowersGrid">
@@ -167,6 +214,61 @@ select option{background:var(--hull)}
     <div style="padding:24px;text-align:center;color:var(--muted)">Chargement...</div>
   </div></div>
 </div>
+
+<!-- ══ PAGE 3 : BATEAUX ══ -->
+<div class="page" id="page-bateaux">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+    <div>
+      <div class="ptitle">Bateaux &amp; Avirons</div>
+      <div class="psubt">Assignez un bateau, des avirons et les rameurs à chaque course.</div>
+    </div>
+    <button class="btn bgold" onclick="exportPdfBateaux()">&#128196; Export PDF</button>
+  </div>
+  <div id="bateauxTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px"></div>
+  <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+    <div id="bateauxContent" style="flex:1;min-width:300px"></div>
+    <div style="width:240px;flex-shrink:0;background:var(--navy);border:1px solid var(--border);border-radius:var(--r);padding:14px;position:sticky;top:74px">
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--gold);margin-bottom:12px">&#9973; Utilisation</div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--border)">Bateaux</div>
+        <div id="sumBateaux"><div style="color:var(--muted);font-size:11px">Aucune assignation</div></div>
+      </div>
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--border)">Paires d&apos;avirons</div>
+        <div id="sumAvirons"><div style="color:var(--muted);font-size:11px">Aucune assignation</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE 4 : IMPORT PDF ══ -->
+<div class="page" id="page-import">
+  <div class="ptitle">Import d&apos;avant-programme PDF</div>
+  <div class="psubt">Importez un PDF d&apos;avant-programme pour extraire automatiquement les courses et les ajouter à l&apos;app.</div>
+  <input type="file" id="pdfFileInput" accept=".pdf" style="display:none" onchange="handlePdfFile(this)">
+  <div class="import-zone" id="importZone" onclick="document.getElementById(&apos;pdfFileInput&apos;).click()"
+       ondragover="event.preventDefault();this.classList.add(&apos;drag&apos;)"
+       ondragleave="this.classList.remove(&apos;drag&apos;)"
+       ondrop="event.preventDefault();this.classList.remove(&apos;drag&apos;);handlePdfDrop(event)">
+    <div class="import-icon">&#128196;</div>
+    <div class="import-title">Glissez un PDF ici</div>
+    <div class="import-sub">ou cliquez pour choisir un fichier · Avant-programme KBR/FRBA</div>
+  </div>
+  <div class="import-result" id="importResult">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:&apos;Playfair Display&apos;,serif;font-size:16px;font-weight:700" id="importCompTitle">Courses détectées</div>
+      <div style="display:flex;gap:7px">
+        <button class="btn boutline" onclick="toggleAllParsed(true)">Tout sélectionner</button>
+        <button class="btn boutline" onclick="toggleAllParsed(false)">Tout désélectionner</button>
+        <button class="btn bgold" onclick="importSelected()">&#10003; Ajouter à l&apos;app</button>
+      </div>
+    </div>
+    <div id="importCourseList"></div>
+  </div>
+  <div id="importStatus" style="font-size:12px;color:var(--muted);margin-top:8px"></div>
+</div>
+
+</div>
 </div>
 
 <!-- Summary modal -->
@@ -183,6 +285,14 @@ select option{background:var(--hull)}
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
+console.log("Script starting...");
+window.addEventListener("error", function(e){ console.error("Global JS error:", e.message, "line:", e.lineno); });
+// Test Firebase write on load
+window.addEventListener("load", function(){
+  firebase.firestore().collection("regata_assignments").limit(1).get()
+    .then(function(s){ console.log("regata_assignments reachable, docs:", s.size); })
+    .catch(function(e){ console.error("regata_assignments ERROR:", e.message); });
+});
 firebase.initializeApp({apiKey:"AIzaSyBqrhteGQUfOz8YjIhcNwrzgIkChq7HlvE",authDomain:"jeune-entrainement.firebaseapp.com",projectId:"jeune-entrainement",storageBucket:"jeune-entrainement.firebasestorage.app",messagingSenderId:"588281323716",appId:"1:588281323716:web:df6edb41921ea321082991"});
 var db=firebase.firestore();
 
@@ -391,14 +501,51 @@ var rowers=[],regs={},pres={},loaded=false,activeCid=COMPS[0].id;
 
 /* ══ ELIGIBILITY ══ */
 function elig(rower,course){
+  // Beg/Déb: liste explicite de rameurs
   if(course.rowerIds!==undefined) return course.rowerIds.indexOf(rower.id)!==-1?"normal":false;
-  var g=G[rower.id]||"M",cat=rower.cat;
-  var norm=(g==="M")?(course.catM||[]):(course.catW||[]);
-  if(norm.indexOf(cat)!==-1) return "normal";
+
+  var g=G[rower.id]||"M", cat=rower.cat, dist=course.d||"";
+  var catM=course.catM||[], catW=course.catW||[];
+  var isOpen=catM.length>0&&catW.length>0; // catM ET catW = open/mixte
+
+  // Courses éligibles selon le genre du rameur (+ open = les deux)
+  var myCats=(g==="M")?catM:catW;
+  var eligCats=isOpen?catM.concat(catW):myCats;
+
+  // ── Correspondance directe (catégorie propre) ──
+  if(eligCats.indexOf(cat)!==-1) return "normal";
+
+  // ── U17 → U19 (même genre ou open) ──
   if(cat==="U17"){
-    var up=(g==="M")?(course.upM||[]):(course.upW||[]);
-    if(up.indexOf("U17")!==-1) return "up";
+    var upCats=isOpen?(course.upM||[]).concat(course.upW||[]):(g==="M"?(course.upM||[]):(course.upW||[]));
+    if(upCats.indexOf("U17")!==-1) return "up";
+    if(eligCats.indexOf("U19")!==-1) return "up";
   }
+
+  // ── U17 et U19 → Senior M ou W (course sans suffixe d'âge) ──
+  // Une course "M" ou "W" senior a catM:["U23"] ou catW:["U23"] (ou ["U19","U23"])
+  // On détecte : la course accepte U23 mais PAS U17 directement
+  if(cat==="U17"||cat==="U19"){
+    var seniorCats=(g==="M")?catM:catW;
+    if(seniorCats.indexOf("U23")!==-1 && seniorCats.indexOf(cat)===-1){
+      return "up";
+    }
+    // Open senior aussi
+    if(isOpen && catM.indexOf("U23")!==-1 && catM.indexOf(cat)===-1){
+      return "up";
+    }
+  }
+
+  // ── U15 → U17 si 1000m ou 500m ──
+  if(cat==="U15" && (dist==="1000m"||dist==="500m")){
+    if(eligCats.indexOf("U17")!==-1) return "up";
+  }
+
+  // ── U13 → U15 si 500m ──
+  if(cat==="U13" && dist==="500m"){
+    if(eligCats.indexOf("U15")!==-1) return "up";
+  }
+
   return false;
 }
 
@@ -427,6 +574,7 @@ db.collection("rowers").onSnapshot(function(snap){
 });
 
 function loadAll(){
+  loadAssignments();
   // Load registrations
   db.collection("regata_inscriptions").onSnapshot(function(snap){
     regs={};
@@ -742,12 +890,23 @@ function clearAll(){
 
 /* ══ PAGE SWITCH ══ */
 function setPage(id){
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  console.log("setPage called:", id);
+  ["presences","inscriptions","bateaux","import"].forEach(function(pid){
+    var el=document.getElementById("page-"+pid);
+    if(el){ el.style.display="none"; el.style.visibility="hidden"; }
+  });
+  var target=document.getElementById("page-"+id);
+  console.log("target element:", target ? "found" : "NOT FOUND", target ? target.tagName : "");
+  if(target){
+    target.style.display="block";
+    target.style.visibility="visible";
+    console.log("target display set to block, offsetParent:", target.offsetParent);
+  }
   document.querySelectorAll(".main-tab").forEach(function(t){t.classList.remove("active");});
-  document.getElementById("page-"+id).classList.add("active");
+  var idx=["presences","inscriptions","bateaux","import"].indexOf(id);
   var tabs=document.querySelectorAll(".main-tab");
-  if(id==="presences")tabs[0].classList.add("active");
-  else tabs[1].classList.add("active");
+  if(idx>=0 && tabs[idx]) tabs[idx].classList.add("active");
+  if(id==="bateaux") setTimeout(renderBateaux, 50);
 }
 
 /* ══ HELPERS ══ */
@@ -755,6 +914,404 @@ function xe(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").r
 function fd(d){var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
 var _ft;
 function flash(m,t){var e=document.getElementById("_fl");e.innerHTML=m;e.style.color=(t==="ok")?"#2eb87a":"#e05c3a";e.style.opacity="1";clearTimeout(_ft);_ft=setTimeout(function(){e.style.opacity="0";},2500);}
+
+/* ══════════════════════════════════════════
+   BATEAUX & AVIRONS
+══════════════════════════════════════════ */
+var BATEAUX = {
+  "1x": ["Rameuse","La dame de nage","Gand by Night","La pelle de la Meuse","2015","1865","Cash &#224; l&#39;Eau","Barracuda","Salani","Filipi perso"],
+  "2x": ["Le Molignée","Forever Meuse","Double Salani","Le Copère","Le double jaune"],
+  "2-": ["Le Copère","Le Molignée","Empacher"],
+  "4x": ["Cap Départ","Phoenix"],
+  "4-": ["Le Phoenix"]
+};
+var AVIRONS = ["Aviron de pointe","Concept2","Concept2 skinny","100","Bantam"];
+
+// Detect boat type from course label
+function detectBoatType(label){
+  if(/8\+/.test(label)) return "8+";
+  if(/4x/i.test(label)) return "4x";
+  if(/4-/.test(label)) return "4-";
+  if(/4\+/.test(label)) return "4+";
+  if(/2x/i.test(label)) return "2x";
+  if(/2-/.test(label)) return "2-";
+  if(/1x/i.test(label)) return "1x";
+  return "autre";
+}
+function nbRowers(type){
+  return {"1x":1,"2x":2,"2-":2,"4x":4,"4-":4,"4+":4,"8+":8}[type]||1;
+}
+
+// assignments[compId][courseCode] = {bateau, aviron}
+var assignments = {};
+
+function loadAssignments(){
+  db.collection("regata_assignments").onSnapshot(function(snap){
+    assignments = {};
+    snap.docs.forEach(function(d){
+      var v=d.data();
+      if(!assignments[v.compId]) assignments[v.compId]={};
+      assignments[v.compId][v.courseCode]={bateau:v.bateau||"",aviron:v.aviron||""};
+    });
+    // assignments loaded
+  });
+}
+
+function saveAssignment(compId,code,field,value){
+  if(!assignments[compId]) assignments[compId]={};
+  if(!assignments[compId][code]) assignments[compId][code]={bateau:"",aviron:""};
+  assignments[compId][code][field]=value;
+  var doc=compId+"_"+code;
+  db.collection("regata_assignments").doc(doc).set(
+    Object.assign({compId:compId,courseCode:code},assignments[compId][code]),
+    {merge:true}
+  );
+  renderSummaryBateaux();
+}
+
+var activeBateauxComp=null;
+function switchBateauxComp(id){activeBateauxComp=id;renderBateaux();}
+
+function renderBateaux(){
+  var tabsEl=document.getElementById("bateauxTabs");
+  var contentEl=document.getElementById("bateauxContent");
+  if(!tabsEl||!contentEl) return;
+
+  // Build tabs
+  var th="";
+  COMPS.forEach(function(comp,i){
+    var active=(activeBateauxComp===comp.id)||(activeBateauxComp===null&&i===0);
+    if(active) activeBateauxComp=comp.id;
+    th+='<button style="padding:5px 11px;border-radius:20px;border:2px solid '+(active?comp.color:'var(--border)')+';background:'+(active?'color-mix(in srgb,'+comp.color+' 20%,transparent)':'transparent')+';color:'+(active?'#fff':'var(--muted)')+';font-size:11px;font-weight:600;cursor:pointer;font-family:\'Source Sans 3\',sans-serif" data-compid="'+comp.id+'" onclick="switchBateauxComp(this.dataset.compid)">';
+    th+=fd(comp.date)+' '+comp.name;
+    th+='</button>';
+  });
+  tabsEl.innerHTML=th;
+
+  // Build content for active comp
+  var comp=COMPS.find(function(x){return x.id===activeBateauxComp;});
+  if(!comp){contentEl.innerHTML='<div style="color:var(--muted);padding:20px">Sélectionnez une régate.</div>';return;}
+
+  var activeCourses=comp.courses.filter(function(cr){
+    return rowers.some(function(r){
+      return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);
+    });
+  });
+
+  if(!activeCourses.length){
+    contentEl.innerHTML='<div style="padding:20px;color:var(--muted);text-align:center;background:var(--navy);border:1px solid var(--border);border-radius:var(--r)">Aucun rameur inscrit pour cette régate.</div>';
+    return;
+  }
+
+  var h='';
+  activeCourses.forEach(function(cr){
+    var btype=detectBoatType(cr.l);
+    var bList=BATEAUX[btype]||[];
+    var cur=assignments[comp.id]&&assignments[comp.id][cr.c]?assignments[comp.id][cr.c]:{bateau:"",aviron:""};
+    var registeredRowers=rowers.filter(function(r){return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);});
+    var nb=registeredRowers.length;
+
+    h+='<div style="background:var(--navy);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden">';
+
+    // Course header
+    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:var(--hull);border-bottom:1px solid var(--border)">';
+    h+='<span style="font-weight:800;font-size:12px;color:'+comp.color+';min-width:50px">'+cr.c+'</span>';
+    h+='<span style="color:var(--spray);font-size:11px;font-weight:700;min-width:55px">'+cr.t+'</span>';
+    h+='<span style="flex:1;font-size:12px;font-weight:600">'+cr.l+' <span style="color:var(--muted);font-size:10px">· '+cr.d+'</span></span>';
+    h+='</div>';
+
+    // Body: rowers + boat + oars
+    h+='<div style="padding:8px 12px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start">';
+
+    // Rowers list
+    h+='<div style="flex:1;min-width:160px">';
+    h+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:5px">Rameurs ('+nb+')</div>';
+    registeredRowers.forEach(function(r){
+      var g=G[r.id]||"M";
+      var cc="cu"+(r.cat||"").toLowerCase().replace("u","");
+      h+='<div style="display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(30,58,85,.2);font-size:12px">';
+      h+='<span style="font-size:9px;color:'+(g==="M"?"#7eceff":"#ffb3d1")+'">'+(g==="M"?"♂":"♀")+'</span>';
+      h+=xe(r.name);
+      h+=' <span class="cat-badge '+cc+'">'+r.cat+'</span>';
+      h+='</div>';
+    });
+    h+='</div>';
+
+    // Boat select
+    h+='<div style="min-width:155px">';
+    h+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:5px">Bateau ('+btype+')</div>';
+    h+='<select class="assign-select" data-cid="'+comp.id+'" data-code="'+cr.c+'" data-field="bateau" onchange="saveAssignment(this.dataset.cid,this.dataset.code,this.dataset.field,this.value)" style="width:100%">';
+    h+='<option value="">-- Choisir --</option>';
+    if(bList.length){
+      bList.forEach(function(b){h+='<option value="'+b+'"'+(cur.bateau===b?' selected':'')+'>'+b+'</option>';});
+    }else{
+      h+='<option disabled>Aucun bateau pour '+btype+'</option>';
+    }
+    h+='</select></div>';
+
+    // Oar select
+    h+='<div style="min-width:155px">';
+    h+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:5px">Avirons</div>';
+    h+='<select class="assign-select" data-cid="'+comp.id+'" data-code="'+cr.c+'" data-field="aviron" onchange="saveAssignment(this.dataset.cid,this.dataset.code,this.dataset.field,this.value)" style="width:100%">';
+    h+='<option value="">-- Choisir --</option>';
+    AVIRONS.forEach(function(a){h+='<option value="'+a+'"'+(cur.aviron===a?' selected':'')+'>'+a+'</option>';});
+    h+='</select></div>';
+
+    h+='</div></div>'; // end body + card
+  });
+
+  contentEl.innerHTML=h;
+  renderSummaryBateaux();
+}
+
+
+
+function renderSummaryBateaux(){
+  // Count bateaux usage
+  var bCounts={}, aCounts={};
+  Object.keys(assignments).forEach(function(cid){
+    Object.keys(assignments[cid]).forEach(function(code){
+      var a=assignments[cid][code];
+      if(a.bateau){bCounts[a.bateau]=(bCounts[a.bateau]||0)+1;}
+      if(a.aviron){
+        // Count pairs = nbRowers / 2 (for sweep) or nbRowers (for scull)
+        var comp=COMPS.find(function(x){return x.id===cid;});
+        var cr=comp?comp.courses.find(function(x){return x.c===code;}):null;
+        var btype=cr?detectBoatType(cr.l):"1x";
+        // Scull (1x,2x,4x): 2 avirons/rameur = nb paires = nb rameurs
+        // Sweep (2-,4-,4+,8+): 1 aviron/rameur = nb paires = nb rameurs / 2... 
+        // Mais on compte en paires: 2- = 1 paire/rameur non, 2 avirons total = 1 paire
+        // Convention: on compte le nb d'avirons
+        // 1x=2, 2x=4, 4x=8 (scull: 2 par rameur)
+        // 2-=2, 4-=4, 8+=8 (sweep: 1 par rameur)
+        var oarsCount={"1x":2,"2x":4,"4x":8,"2-":2,"4-":4,"4+":4,"8+":8}[btype]||2;
+        var pairs=oarsCount/2; // on affiche en paires
+        aCounts[a.aviron]=(aCounts[a.aviron]||0)+pairs;
+      }
+    });
+  });
+
+  var bh="";
+  var bKeys=Object.keys(bCounts).sort();
+  if(bKeys.length){
+    bKeys.forEach(function(b){
+      bh+='<div class="sum-side-row"><span>'+b+'</span><span class="sum-badge">'+bCounts[b]+'x</span></div>';
+    });
+  }else{bh='<div style="color:var(--muted);font-size:11px">Aucun bateau assigné</div>';}
+  document.getElementById("sumBateaux").innerHTML=bh;
+
+  var ah="";
+  var aKeys=Object.keys(aCounts).sort();
+  if(aKeys.length){
+    aKeys.forEach(function(a){
+      ah+='<div class="sum-side-row"><span>'+a+'</span><span class="sum-badge">'+aCounts[a]+' paires</span></div>';
+    });
+  }else{ah='<div style="color:var(--muted);font-size:11px">Aucun aviron assigné</div>';}
+  document.getElementById("sumAvirons").innerHTML=ah;
+}
+
+/* ══════════════════════════════════════════
+   IMPORT PDF
+══════════════════════════════════════════ */
+var parsedCompData = null;
+
+function handlePdfFile(input){
+  if(!input.files||!input.files[0]) return;
+  processPdf(input.files[0]);
+}
+function handlePdfDrop(e){
+  var f=e.dataTransfer.files[0];
+  if(f&&f.type==="application/pdf") processPdf(f);
+}
+
+function processPdf(file){
+  var status=document.getElementById("importStatus");
+  var result=document.getElementById("importResult");
+  result.classList.remove("show");
+  status.innerHTML='<span style="color:var(--spray)">&#8987; Analyse du PDF en cours...</span>';
+
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var b64=e.target.result.split(",")[1];
+    callClaudeForPdf(b64, file.name);
+  };
+  reader.readAsDataURL(file);
+}
+
+function callClaudeForPdf(b64data, filename){
+  var status=document.getElementById("importStatus");
+  fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:2000,
+      system:"You are a rowing regatta schedule parser. Extract info from a Belgian rowing avant-programme PDF. Return ONLY valid JSON, no markdown: {competition:{name,date(YYYY-MM-DD),location},courses:[{num,time,label,distance}]}. num=code like A1/101, time=10h05, distance=500m/1000m/2000m.",
+      messages:[{role:"user",content:[
+        {type:"document",source:{type:"base64",media_type:"application/pdf",data:b64data}},
+        {type:"text",text:"Extract all courses from this rowing avant-programme PDF and return the JSON."}
+      ]}]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var text=data.content&&data.content[0]?data.content[0].text:"";
+    try{
+      var clean=text.replace(/```json|```/g,"").trim();
+      parsedCompData=JSON.parse(clean);
+      showParsedCourses(parsedCompData, filename);
+      status.innerHTML='<span style="color:var(--green)">&#10003; '+parsedCompData.courses.length+' courses détectées</span>';
+    }catch(err){
+      status.innerHTML='<span style="color:var(--coral)">&#9888; Impossible de parser la réponse. Réessayez avec un PDF plus clair.</span>';
+    }
+  })
+  .catch(function(err){
+    status.innerHTML='<span style="color:var(--coral)">&#9888; Erreur API: '+err.message+'</span>';
+  });
+}
+
+function showParsedCourses(data, filename){
+  var result=document.getElementById("importResult");
+  var list=document.getElementById("importCourseList");
+  var title=document.getElementById("importCompTitle");
+
+  title.innerHTML=(data.competition?data.competition.name+" – "+data.competition.date:filename);
+
+  var h="";
+  data.courses.forEach(function(cr,i){
+    h+='<div class="parsed-course-row">';
+    h+='<input type="checkbox" id="pc'+i+'" checked>';
+    h+='<span class="parsed-num">'+xe(cr.num)+'</span>';
+    h+='<span class="parsed-time">'+xe(cr.time)+'</span>';
+    h+='<span class="parsed-label">'+xe(cr.label)+'</span>';
+    h+='<span class="parsed-dist">'+xe(cr.distance)+'</span>';
+    h+='</div>';
+  });
+  list.innerHTML=h;
+  result.classList.add("show");
+}
+
+function toggleAllParsed(val){
+  document.querySelectorAll("#importCourseList input[type=checkbox]").forEach(function(cb){cb.checked=val;});
+}
+
+function importSelected(){
+  if(!parsedCompData) return;
+  var checked=[];
+  document.querySelectorAll("#importCourseList input[type=checkbox]").forEach(function(cb,i){
+    if(cb.checked&&parsedCompData.courses[i]) checked.push(parsedCompData.courses[i]);
+  });
+  if(!checked.length){flash("Sélectionnez au moins une course","");return;}
+
+  // Build new competition object
+  var c=parsedCompData.competition||{};
+  var newId="import_"+(c.date||Date.now()).replace(/-/g,"");
+  var existing=COMPS.find(function(x){return x.date===c.date;});
+  if(existing){
+    // Add courses to existing competition
+    checked.forEach(function(cr){
+      if(!existing.courses.find(function(x){return x.c===cr.num;})){
+        existing.courses.push({c:cr.num,t:cr.time,l:cr.label,d:cr.distance});
+      }
+    });
+    flash(checked.length+" courses ajoutées à "+existing.name,"ok");
+  } else {
+    // Create new competition
+    var randomColor=["#4a9fd4","#d4a843","#2eb87a","#e05c3a","#9b59b6"][COMPS.length%5];
+    COMPS.push({
+      id:newId, date:c.date||"", name:c.name||"Régate importée",
+      deadline:"", color:randomColor, days:["Présent"],
+      courses:checked.map(function(cr){return {c:cr.num,t:cr.time,l:cr.label,d:cr.distance};})
+    });
+    flash("Nouvelle régate ajoutée: "+checked.length+" courses","ok");
+  }
+  renderAll();
+  setPage("presences");
+}
+
+/* ══ EXPORT PDF BATEAUX ══ */
+function exportPdfBateaux(){
+  var lines=[];
+  lines.push("R.C.N.D. - Bateaux & Avirons 2026");
+  lines.push("Généré le "+new Date().toLocaleDateString("fr-BE"));
+  lines.push("");
+
+  COMPS.forEach(function(comp){
+    var activeCourses=comp.courses.filter(function(cr){
+      return rowers.some(function(r){
+        return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);
+      });
+    });
+    if(!activeCourses.length) return;
+
+    lines.push("══════════════════════════════════════════");
+    lines.push(comp.name.toUpperCase()+" - "+fd(comp.date));
+    lines.push("══════════════════════════════════════════");
+    lines.push("");
+
+    activeCourses.forEach(function(cr){
+      var cur=assignments[comp.id]&&assignments[comp.id][cr.c]?assignments[comp.id][cr.c]:{bateau:"",aviron:""};
+      var registeredRowers=rowers.filter(function(r){return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);});
+      lines.push("  Course "+cr.c+" - "+cr.t+" - "+cr.l+" ("+cr.d+")");
+      lines.push("  Bateau  : "+(cur.bateau||"Non assigné"));
+      lines.push("  Avirons : "+(cur.aviron||"Non assignés"));
+      lines.push("  Rameurs : "+registeredRowers.map(function(r){return r.name+" ("+r.cat+")";}).join(", "));
+      lines.push("");
+    });
+  });
+
+  // Build PDF as HTML then print
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html+='<style>body{font-family:Arial,sans-serif;font-size:12px;color:#000;margin:20px}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#1e4a75;margin:16px 0 6px;border-bottom:2px solid #1e4a75;padding-bottom:3px}table{width:100%;border-collapse:collapse;margin-bottom:12px}th{background:#07111f;color:#fff;padding:6px 8px;text-align:left;font-size:11px}td{padding:5px 8px;border-bottom:1px solid #ddd;font-size:11px}.rowers{color:#555;font-size:10px}.badge{display:inline-block;background:#eef;padding:1px 4px;border-radius:3px;font-size:9px;margin-left:3px}@media print{h2{page-break-before:auto}}</style>';
+  html+='</head><body>';
+  html+='<h1>R.C.N.D. &ndash; Bateaux &amp; Avirons 2026</h1>';
+  html+='<p style="color:#666;font-size:10px">Généré le '+new Date().toLocaleDateString("fr-BE")+'</p>';
+
+  COMPS.forEach(function(comp){
+    var activeCourses=comp.courses.filter(function(cr){
+      return rowers.some(function(r){
+        return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);
+      });
+    });
+    if(!activeCourses.length) return;
+
+    html+='<h2>'+comp.name+' &ndash; '+fd(comp.date)+'</h2>';
+    html+='<table><thead><tr><th>N&deg;</th><th>Heure</th><th>&Eacute;preuve</th><th>Bateau</th><th>Avirons</th><th>Rameurs</th></tr></thead><tbody>';
+
+    activeCourses.forEach(function(cr){
+      var cur=assignments[comp.id]&&assignments[comp.id][cr.c]?assignments[comp.id][cr.c]:{bateau:"",aviron:""};
+      var rowNames=rowers.filter(function(r){return regs[r.id]&&regs[r.id][comp.id]&&regs[r.id][comp.id].has(cr.c);})
+        .map(function(r){return r.name+' <span class="badge">'+r.cat+'</span>';}).join(", ");
+      html+='<tr>';
+      html+='<td style="font-weight:bold;color:#1e4a75">'+cr.c+'</td>';
+      html+='<td style="color:#2e6ca4;font-weight:bold">'+cr.t+'</td>';
+      html+='<td>'+cr.l+' <span style="color:#999;font-size:10px">'+cr.d+'</span></td>';
+      html+='<td style="font-weight:bold">'+( cur.bateau||'<span style="color:#999">-</span>')+'</td>';
+      html+='<td>'+( cur.aviron||'<span style="color:#999">-</span>')+'</td>';
+      html+='<td class="rowers">'+( rowNames||'<span style="color:#999">-</span>')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table>';
+  });
+
+  html+='</body></html>';
+
+  var w=window.open("","_blank","width=900,height=700");
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},500);
+}
+
+// Attach tab click handlers via JS (avoid onclick HTML attribute issues)
+document.addEventListener("DOMContentLoaded", function(){
+  document.querySelectorAll("[data-page]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      console.log("Tab clicked:", btn.dataset.page);
+      setPage(btn.dataset.page);
+    });
+  });
+  console.log("Tab listeners attached:", document.querySelectorAll("[data-page]").length);
+});
 </script>
 </body>
 </html>
