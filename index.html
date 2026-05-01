@@ -328,6 +328,7 @@ var COMPS=[
   {c:"1", t:"9h30",  l:"1x MU13",        d:"500m",  catM:["U13"]},
   {c:"2", t:"9h36",  l:"2x WU13",        d:"500m",  catW:["U13"]},
   {c:"3", t:"9h43",  l:"1x WU15",        d:"1000m", catW:["U15"]},
+  {c:"4", t:"9h50",  l:"2x Masters M&W", d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"5", t:"10h11", l:"4x M",           d:"2000m", catM:["U19","U23"]},
   {c:"6", t:"10h21", l:"1x W",           d:"2000m", catW:["U19","U23"]},
   {c:"7", t:"10h30", l:"2x WU19",        d:"2000m", catW:["U19"],upW:["U17"]},
@@ -337,6 +338,7 @@ var COMPS=[
   {c:"11", t:"11h22", l:"1x MU15",        d:"1000m", catM:["U15"]},
   {c:"12", t:"11h39", l:"1x Déb M",       d:"1000m", rowerIds:["r02","r14","r16"]},
   {c:"13", t:"11h50", l:"2x Déb W",       d:"1000m", rowerIds:["r04","r13"]},
+  {c:"14", t:"12h00", l:"4x/4- Masters",  d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"15", t:"12h08", l:"2x Open",        d:"1000m", catM:["U17","U19","U23"],catW:["U17","U19","U23"]},
   {c:"17", t:"13h29", l:"1x WU13",        d:"500m",  catW:["U13"]},
   {c:"18", t:"13h35", l:"2x MU13",        d:"500m",  catM:["U13"]},
@@ -347,6 +349,7 @@ var COMPS=[
   {c:"23", t:"14h21", l:"2x W",           d:"2000m", catW:["U19","U23"]},
   {c:"24", t:"14h30", l:"1x LM",          d:"2000m", catM:["U23"]},
   {c:"25", t:"14h35", l:"1x WU19",        d:"2000m", catW:["U19"],upW:["U17"]},
+  {c:"26m",t:"14h44", l:"1x Masters M&W", d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"26", t:"15h05", l:"2x WU15",        d:"1000m", catW:["U15"]},
   {c:"27", t:"15h12", l:"4x MU15",        d:"1000m", catM:["U15"]},
   {c:"28", t:"15h19", l:"1x MU19",        d:"2000m", catM:["U19"],upM:["U17"]},
@@ -365,6 +368,7 @@ var COMPS=[
 {id:"rcnd",date:"2026-05-24",name:"1000m d'Anhée",deadline:"2026-05-15",color:"#d4a843",
  days:["Présent"],
  courses:[
+  {c:"A1",  t:"10h05", l:"4X Masters",      d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"A2",  t:"10h15", l:"2X WU15",        d:"1000m", catW:["U15"]},
   {c:"A3",  t:"10h20", l:"1x MU15 Pol.",   d:"1000m", catM:["U15"]},
   {c:"A4",  t:"10h35", l:"2X M Beg",       d:"1000m", rowerIds:["r02","r14","r16"]},
@@ -378,6 +382,8 @@ var COMPS=[
   {c:"A12", t:"11h45", l:"4X MU15",        d:"1000m", catM:["U15"]},
   {c:"B13", t:"13h00", l:"1X M",           d:"1000m", catM:["U19","U23"]},
   {c:"B14", t:"13h05", l:"2X MU19-17",     d:"1000m", catM:["U17","U19"],upM:["U17"]},
+  {c:"B15", t:"13h20", l:"1x W Masters",    d:"1000m", catW:["U23"],master:true},
+  {c:"B16", t:"13h30", l:"1x M Masters",    d:"1000m", catM:["U23"],master:true},
   {c:"B17", t:"13h50", l:"2X M",           d:"1000m", catM:["U19","U23"]},
   {c:"B18", t:"14h00", l:"1X WU15 Pol.",   d:"1000m", catW:["U15"]},
   {c:"B19", t:"14h10", l:"2X W",           d:"1000m", catW:["U19","U23"]},
@@ -385,6 +391,8 @@ var COMPS=[
   {c:"B21", t:"14h25", l:"1X MU13",        d:"500m",  catM:["U13"]},
   {c:"B22", t:"14h35", l:"1X WU13",        d:"500m",  catW:["U13"]},
   {c:"C23", t:"15h35", l:"1X WU19-17",     d:"1000m", catW:["U17","U19"],upW:["U17"]},
+  {c:"C24", t:"15h40", l:"2x W Masters",    d:"1000m", catW:["U23"],master:true},
+  {c:"C25", t:"15h45", l:"2x M Masters",    d:"1000m", catM:["U23"],master:true},
   {c:"C26", t:"16h00", l:"2- W",           d:"1000m", catW:["U19","U23"]},
   {c:"C27", t:"16h05", l:"2X MU15",        d:"1000m", catM:["U15"]},
   {c:"C28", t:"16h10", l:"4X WU15",        d:"1000m", catW:["U15"]},
@@ -394,6 +402,7 @@ var COMPS=[
 {id:"uliege",date:"2026-08-30",name:"1000m de Liège",deadline:"2026-08-18",color:"#2eb87a",
  days:["Présent"],
  courses:[
+  {c:"A1",  t:"10h05", l:"4x Masters",     d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"A2",  t:"10h15", l:"2-M & 2-MU23",  d:"1000m", catM:["U19","U23"]},
   {c:"A3",  t:"10h25", l:"1x MU15 pol.",   d:"1000m", catM:["U15"]},
   {c:"A4",  t:"10h35", l:"2x M Beg",       d:"1000m", rowerIds:["r02","r14","r16"]},
@@ -408,11 +417,14 @@ var COMPS=[
   {c:"B14", t:"13h15", l:"1x MU23 & 1xM",  d:"1000m", catM:["U19","U23"]},
   {c:"B15", t:"13h25", l:"2x MU19",        d:"1000m", catM:["U19"],upM:["U17"]},
   {c:"B16", t:"13h30", l:"1x M Beg.",      d:"1000m", rowerIds:["r02","r14","r16"]},
+  {c:"B17", t:"13h40", l:"2x W Masters",    d:"1000m", catW:["U23"],master:true},
+  {c:"B18", t:"13h50", l:"2x M Masters",    d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"B19", t:"14h05", l:"1x MU17",        d:"1000m", catM:["U17"]},
   {c:"B20", t:"14h15", l:"4-M",            d:"1000m", catM:["U19","U23"]},
   {c:"C21", t:"15h35", l:"2x MU23 & 2xM",  d:"1000m", catM:["U19","U23"]},
   {c:"C22", t:"15h40", l:"4x W",           d:"1000m", catW:["U19","U23"]},
   {c:"C23", t:"15h45", l:"2x MU15",        d:"1000m", catM:["U15"]},
+  {c:"C24", t:"15h52", l:"1x Master",       d:"1000m", catM:["U23"],catW:["U23"],master:true},
   {c:"C25", t:"16h05", l:"1x WU15 pol.",   d:"1000m", catW:["U15"]},
   {c:"C26", t:"16h15", l:"2x MU17",        d:"1000m", catM:["U17"]},
   {c:"C27", t:"16h20", l:"2x W Beg.",      d:"1000m", rowerIds:["r04","r13"]},
@@ -427,6 +439,8 @@ var COMPS=[
   {c:"004",t:"Sa 11h10",l:"2x WU15",        d:"1000m", catW:["U15"],          day:"Samedi"},
   {c:"005",t:"Sa 11h20",l:"1x W Beg",       d:"1000m", rowerIds:["r04","r13"],day:"Samedi"},
   {c:"006",t:"Sa 11h30",l:"2x M Beg",       d:"1000m", rowerIds:["r02","r14","r16"],day:"Samedi"},
+  {c:"007",t:"Sa 11h35",l:"8+ Masters",      d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Samedi"},
+  {c:"008",t:"Sa 13h15",l:"1x Masters",      d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Samedi"},
   {c:"101",t:"Sa 13h45",l:"4x MixteU19",    d:"2000m", catM:["U17","U19"],catW:["U17","U19"],upM:["U17"],upW:["U17"],day:"Samedi"},
   {c:"102",t:"Sa 13h50",l:"1x MU23/M",      d:"2000m", catM:["U19","U23"],    day:"Samedi"},
   {c:"103",t:"Sa 14h00",l:"1x LM",          d:"2000m", catM:["U23"],          day:"Samedi"},
@@ -453,7 +467,9 @@ var COMPS=[
   {c:"010",t:"Di 10h00",l:"W Beg 1X",       d:"1000m", rowerIds:["r04","r13"],day:"Dimanche"},
   {c:"011",t:"Di 10h10",l:"M Beg 2X",       d:"1000m", rowerIds:["r02","r14","r16"],day:"Dimanche"},
   {c:"012",t:"Di 10h20",l:"W U15 4X",       d:"1000m", catW:["U15"],          day:"Dimanche"},
-  {c:"013",t:"Di 10h30",l:"M U15 1X",       d:"1000m", catM:["U15"],          day:"Dimanche"},
+  {c:"013",t:"Di 10h15",l:"2x Masters",      d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Dimanche"},
+  {c:"014",t:"Di 10h30",l:"M U15 1X",       d:"1000m", catM:["U15"],          day:"Dimanche"},
+  {c:"018",t:"Di 14h30",l:"4x Masters",      d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Dimanche"},
   {c:"206",t:"Di 11h10",l:"W U19 4-",       d:"2000m", catW:["U19"],upW:["U17"],day:"Dimanche"},
   {c:"207",t:"Di 11h20",l:"M U19 8+",       d:"2000m", catM:["U19"],upM:["U17"],day:"Dimanche"},
   {c:"208",t:"Di 11h30",l:"M 4-",           d:"2000m", catM:["U19","U23"],    day:"Dimanche"},
@@ -483,6 +499,7 @@ var COMPS=[
   {c:"112",t:"Sa 14h30",l:"LM 4X",         d:"2000m", catM:["U23"],          day:"Samedi"},
   {c:"113",t:"Sa 14h40",l:"W U19 8+",      d:"2000m", catW:["U19"],upW:["U17"],day:"Samedi"},
   {c:"114",t:"Sa 14h50",l:"W/M Mixte 4X",  d:"2000m", catM:["U19"],catW:["U19"],upM:["U17"],upW:["U17"],day:"Samedi"},
+  {c:"115",t:"Sa 15h10",l:"Masters 4-",     d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Samedi"},
   {c:"116",t:"Sa 15h20",l:"M U15 2X",      d:"1000m", catM:["U15"],          day:"Samedi"},
   {c:"117",t:"Sa 15h40",l:"M U17 2X",      d:"2000m", catM:["U17"],          day:"Samedi"},
   {c:"118",t:"Sa 15h50",l:"W U17 1X",      d:"2000m", catW:["U17"],          day:"Samedi"},
@@ -492,6 +509,7 @@ var COMPS=[
   {c:"202",t:"Di 10h10",l:"M Beg 2X",      d:"1000m", rowerIds:["r02","r14","r16"],day:"Dimanche"},
   {c:"203",t:"Di 10h20",l:"W U15 4X",      d:"1000m", catW:["U15"],          day:"Dimanche"},
   {c:"204",t:"Di 10h30",l:"M U15 1X",      d:"1000m", catM:["U15"],          day:"Dimanche"},
+  {c:"205",t:"Di 10h50",l:"Masters 4X",     d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Dimanche"},
   {c:"206",t:"Di 11h10",l:"W U19 4-",      d:"2000m", catW:["U19"],upW:["U17"],day:"Dimanche"},
   {c:"207",t:"Di 11h20",l:"M U19 8+",      d:"2000m", catM:["U19"],upM:["U17"],day:"Dimanche"},
   {c:"208",t:"Di 11h30",l:"M 4-",          d:"2000m", catM:["U19","U23"],    day:"Dimanche"},
@@ -500,7 +518,8 @@ var COMPS=[
   {c:"211",t:"Di 14h10",l:"W U17 2X",      d:"2000m", catW:["U17"],          day:"Dimanche"},
   {c:"212",t:"Di 14h20",l:"M U17 1X",      d:"2000m", catM:["U17"],          day:"Dimanche"},
   {c:"213",t:"Di 14h40",l:"W U15 2X",      d:"1000m", catW:["U15"],          day:"Dimanche"},
-  {c:"216",t:"Di 15h20",l:"LW 4X",         d:"2000m", catW:["U23"],          day:"Dimanche"},
+  {c:"215M",t:"Di 15h20",l:"Masters 8+",    d:"1000m", catM:["U23"],catW:["U23"],master:true,day:"Dimanche"},
+  {c:"216",t:"Di 15h40",l:"LW 4X",         d:"2000m", catW:["U23"],          day:"Dimanche"},
   {c:"217",t:"Di 15h40",l:"W/M U19 Mixte", d:"2000m", catM:["U19"],catW:["U19"],upM:["U17"],upW:["U17"],day:"Dimanche"},
   {c:"219",t:"Di 16h00",l:"M 8+",          d:"2000m", catM:["U19","U23"],    day:"Dimanche"},
 ]}
@@ -518,6 +537,25 @@ function elig(rower,course){
   var g=G[rower.id]||"M", cat=rower.cat, dist=course.d||"";
   var catM=course.catM||[], catW=course.catW||[];
   var isOpen=catM.length>0&&catW.length>0; // catM ET catW = open/mixte
+
+  // ── Masters (MM / MW) ──
+  // MM = hommes Master, MW = femmes Master
+  if(cat==="MM"||cat==="MW"){
+    var masterGender=(cat==="MM")?"M":"W";
+    var isMasterCourse=course.master===true;
+    if(isMasterCourse){
+      // Course spécifique Masters → éligible selon genre
+      if(isOpen) return "normal";
+      if(masterGender==="M" && catM.indexOf("U23")!==-1) return "normal";
+      if(masterGender==="W" && catW.indexOf("U23")!==-1) return "normal";
+      return false;
+    }
+    // Course senior non-Master (M, W, Open) → éligible
+    if(isOpen) return "normal";
+    if(masterGender==="M" && catM.indexOf("U23")!==-1) return "normal";
+    if(masterGender==="W" && catW.indexOf("U23")!==-1) return "normal";
+    return false;
+  }
 
   // Courses éligibles selon le genre du rameur (+ open = les deux)
   var myCats=(g==="M")?catM:catW;
