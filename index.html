@@ -222,7 +222,10 @@ select option{background:var(--hull)}
       <div class="ptitle">Bateaux &amp; Avirons</div>
       <div class="psubt">Assignez un bateau, des avirons et les rameurs à chaque course.</div>
     </div>
-    <button class="btn bgold" onclick="exportPdfBateaux()">&#128196; Export PDF</button>
+    <div style="display:flex;gap:6px">
+      <button class="btn boutline" onclick="openGestionBateaux()" style="font-size:12px">&#9881; G&#233;rer</button>
+      <button class="btn bgold" onclick="exportPdfBateaux()">&#128196; Export PDF</button>
+    </div>
   </div>
   <div id="bateauxTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px"></div>
   <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
@@ -269,6 +272,65 @@ select option{background:var(--hull)}
 </div>
 
 </div>
+</div>
+
+<!-- ══ Modale Gestion ══ -->
+<div class="mbg" id="gestionBg" onclick="if(event.target===this)closeGestionBateaux()" style="display:none">
+  <div class="modal" style="max-width:520px;max-height:82vh;overflow-y:auto">
+    <div class="mtitle">&#9881; G&#233;rer</div>
+    <div style="display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;flex-wrap:wrap">
+      <button id="gtab-rameurs" class="btn boutline" style="font-size:11px" onclick="switchGTab('rameurs')">&#128388; Rameurs</button>
+      <button id="gtab-bateaux" class="btn bgold" style="font-size:11px" onclick="switchGTab('bateaux')">&#9973; Bateaux</button>
+      <button id="gtab-avirons" class="btn boutline" style="font-size:11px" onclick="switchGTab('avirons')">&#129528; Avirons</button>
+    </div>
+
+    <!-- PANEL RAMEURS -->
+    <div id="gpanel-rameurs" style="display:none">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Ajoutez, renommez ou supprimez des rameurs. Les modifications sont sauvegard&#233;es dans Firebase.</div>
+      <div id="rowersList" style="margin-bottom:12px;max-height:300px;overflow-y:auto"></div>
+      <div style="background:var(--hull);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Nouveau rameur</div>
+        <div style="display:flex;gap:6px">
+          <input id="newRowerName" type="text" placeholder="Pr&#233;nom Nom" style="flex:2;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;padding:6px 9px;outline:none">
+          <select id="newRowerCat" style="flex:1;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;padding:6px 7px;outline:none">
+            <option>U13</option><option>U15</option><option>U17</option><option selected>U19</option>
+            <option>U23</option><option>MM</option><option>MW</option>
+          </select>
+          <select id="newRowerGender" style="flex:0 0 60px;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;padding:6px 7px;outline:none">
+            <option value="M">&#9794; M</option><option value="W">&#9792; F</option>
+          </select>
+        </div>
+        <button class="btn bgold" style="font-size:12px;align-self:flex-end" onclick="addRowerFromPanel()">+ Ajouter le rameur</button>
+      </div>
+    </div>
+
+    <!-- PANEL BATEAUX -->
+    <div id="gpanel-bateaux">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">G&#233;rez les noms de bateaux par type. <strong>Sauvegarder</strong> pour appliquer.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px" id="btypeSelector"></div>
+      <div id="bateauxList" style="margin-bottom:12px"></div>
+      <div style="display:flex;gap:6px">
+        <input id="newBateauInput" type="text" placeholder="Nom du nouveau bateau..." style="flex:1;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;padding:6px 9px;outline:none" onkeydown="if(event.key==='Enter')addBateauItem()">
+        <button class="btn bgold" style="font-size:11px" onclick="addBateauItem()">+ Ajouter</button>
+      </div>
+    </div>
+
+    <!-- PANEL AVIRONS -->
+    <div id="gpanel-avirons" style="display:none">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">G&#233;rez la liste des paires d&#x27;avirons. <strong>Sauvegarder</strong> pour appliquer.</div>
+      <div id="avironsList" style="margin-bottom:12px"></div>
+      <div style="display:flex;gap:6px">
+        <input id="newAvironInput" type="text" placeholder="Nom de la paire d'avirons..." style="flex:1;background:#fff;border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:12px;padding:6px 9px;outline:none" onkeydown="if(event.key==='Enter')addAvironItem()">
+        <button class="btn bgold" style="font-size:11px" onclick="addAvironItem()">+ Ajouter</button>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:14px 0"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn boutline" onclick="closeGestionBateaux()">Fermer</button>
+      <button class="btn bgold" id="btnSaveCatalog" onclick="saveCatalogAndClose()">&#10003; Sauvegarder bateaux &amp; avirons</button>
+    </div>
+  </div>
 </div>
 
 <!-- Summary modal -->
@@ -624,6 +686,7 @@ db.collection("rowers").onSnapshot(function(snap){
 
 function loadAll(){
   loadAssignments();
+  loadCatalog();
   // Load registrations
   db.collection("regata_inscriptions").onSnapshot(function(snap){
     regs={};
@@ -967,14 +1030,31 @@ function flash(m,t){var e=document.getElementById("_fl");e.innerHTML=m;e.style.c
 /* ══════════════════════════════════════════
    BATEAUX & AVIRONS
 ══════════════════════════════════════════ */
+/* ── Catalogue bateaux & avirons (source de vérité, surchargeable via Firebase) ── */
 var BATEAUX = {
-  "1x": ["Rameuse","La dame de nage","Gand by Night","La pelle de la Meuse","2015","1865","Cash &#224; l&#39;Eau","Barracuda","Salani","Filipi perso"],
-  "2x": ["Le Molignée","Forever Meuse","Double Salani","Le Copère","Le double jaune"],
-  "2-": ["Le Copère","Le Molignée","Empacher"],
-  "4x": ["Cap Départ","Phoenix"],
+  "1x": ["Rameuse","La dame de nage","Gand by Night","La pelle de la Meuse","2015","1865","Cash \u00e0 l\u0027Eau","Barracuda","Salani","Filipi perso"],
+  "2x": ["Le Moligni\u00e8e","Forever Meuse","Double Salani","Le Cop\u00e8re","Le double jaune"],
+  "2-": ["Le Cop\u00e8re","Le Moligni\u00e8e","Empacher"],
+  "4x": ["Cap D\u00e9part","Phoenix"],
   "4-": ["Le Phoenix"]
 };
 var AVIRONS = ["Aviron de pointe","Concept2","Concept2 skinny","100","Bantam"];
+
+function loadCatalog(){
+  db.collection("regata_catalog").onSnapshot(function(snap){
+    snap.docs.forEach(function(d){
+      var v=d.data();
+      if(d.id==="bateaux" && v.data){ BATEAUX=v.data; }
+      if(d.id==="avirons" && v.data){ AVIRONS=v.data; }
+    });
+    renderBateaux();
+  });
+}
+
+function saveCatalog(){
+  db.collection("regata_catalog").doc("bateaux").set({data:BATEAUX});
+  db.collection("regata_catalog").doc("avirons").set({data:AVIRONS});
+}
 
 // Detect boat type from course label
 function detectBoatType(label){
@@ -1113,6 +1193,185 @@ function renderBateaux(){
   renderSummaryBateaux();
 }
 
+
+
+
+/* ══ GESTION (Rameurs / Bateaux / Avirons) ══ */
+var activeGTab = "bateaux";
+var activeGBtype = "1x";
+var BTYPES = ["1x","2x","2-","4x","4-","4+","8+","autre"];
+
+function openGestionBateaux(){
+  document.getElementById("gestionBg").style.display="flex";
+  switchGTab("bateaux");
+}
+function closeGestionBateaux(){
+  document.getElementById("gestionBg").style.display="none";
+}
+function saveCatalogAndClose(){
+  saveCatalog();
+  flash("Catalogue sauvegard&#233; &#10003;","ok");
+  closeGestionBateaux();
+}
+function switchGTab(tab){
+  activeGTab=tab;
+  ["rameurs","bateaux","avirons"].forEach(function(t){
+    var p=document.getElementById("gpanel-"+t);
+    var b=document.getElementById("gtab-"+t);
+    if(p) p.style.display=(t===tab)?"block":"none";
+    if(b) b.className=(t===tab)?"btn bgold":"btn boutline";
+  });
+  // Show/hide save button (only for bateaux/avirons)
+  var sb=document.getElementById("btnSaveCatalog");
+  if(sb) sb.style.display=(tab==="rameurs")?"none":"inline-block";
+  if(tab==="bateaux") renderGBateaux();
+  else if(tab==="avirons") renderGAvirons();
+  else renderGRameurs();
+}
+
+/* ── Rameurs ── */
+function renderGRameurs(){
+  var h="";
+  if(!rowers.length){
+    h='<div style="color:var(--muted);font-size:11px;padding:8px 0">Aucun rameur dans Firebase.</div>';
+  }
+  rowers.forEach(function(rower){
+    var g=rower.gender||"M";
+    var cc="cu"+(rower.cat||"").toLowerCase().replace("u","");
+    h+='<div style="display:flex;align-items:center;gap:7px;padding:5px 8px;background:var(--hull);border:1px solid var(--border);border-radius:7px;margin-bottom:5px">';
+    h+='<span style="font-size:10px;color:'+(g==="M"?"#7eceff":"#ffb3d1")+'">'+(g==="M"?"&#9794;":"&#9792;")+'</span>';
+    h+='<span style="flex:1;font-size:12px;font-weight:600">'+xe(rower.name)+'</span>';
+    h+='<span class="cat-badge '+cc+'">'+rower.cat+'</span>';
+    h+='<button data-rid="'+rower.id+'" onclick="renameRower(this.dataset.rid)" style="border:none;background:transparent;cursor:pointer;color:var(--spray);font-size:13px;padding:2px 6px" title="Renommer">&#9998;</button>';
+    h+='<button data-rid="'+rower.id+'" data-rname="'+xe(rower.name)+'" onclick="deleteRower(this.dataset.rid,this.dataset.rname)" style="border:none;background:transparent;cursor:pointer;color:var(--coral);font-size:15px;padding:2px 6px;line-height:1" title="Supprimer">&times;</button>';
+    h+='</div>';
+  });
+  var el=document.getElementById("rowersList");
+  if(el) el.innerHTML=h;
+}
+function addRowerFromPanel(){
+  var name=document.getElementById("newRowerName").value.trim();
+  var cat=document.getElementById("newRowerCat").value;
+  var gender=document.getElementById("newRowerGender").value;
+  if(!name){flash("Entrez un nom.","err");return;}
+  db.collection("rowers").add({name:name,cat:cat,gender:gender,ts:firebase.firestore.FieldValue.serverTimestamp()})
+    .then(function(){
+      document.getElementById("newRowerName").value="";
+      flash(name+" ajout&#233;(e) &#10003;","ok");
+    })
+    .catch(function(e){flash("Erreur: "+e.message,"err");});
+}
+function renameRower(id){
+  var rower=rowers.find(function(r){return r.id===id;});
+  if(!rower) return;
+  var nouveau=prompt("Nouveau nom pour «"+rower.name+"» :",rower.name);
+  if(!nouveau||nouveau.trim()===rower.name) return;
+  db.collection("rowers").doc(id).update({name:nouveau.trim()})
+    .then(function(){flash("Renomm&#233; &#10003;","ok");})
+    .catch(function(e){flash("Erreur: "+e.message,"err");});
+}
+function deleteRower(id,name){
+  if(!confirm("Supprimer "+name+" ? Toutes ses pr&#233;sences et inscriptions seront effac&#233;es.")) return;
+  var batch=db.batch();
+  // Delete rower
+  batch.delete(db.collection("rowers").doc(id));
+  // Delete presences & registrations (collected from memory)
+  if(pres[id]) Object.keys(pres[id]).forEach(function(cid){
+    pres[id][cid].forEach(function(day){
+      var docId=id+"_"+cid+"_"+day.replace(/ /g,"_");
+      batch.delete(db.collection("regata_presences").doc(docId));
+    });
+  });
+  if(regs[id]) Object.keys(regs[id]).forEach(function(cid){
+    regs[id][cid].forEach(function(code){
+      batch.delete(db.collection("regata_inscriptions").doc(id+"_"+cid+"_"+code));
+    });
+  });
+  batch.commit()
+    .then(function(){flash(name+" supprim&#233;(e)","ok");})
+    .catch(function(e){flash("Erreur: "+e.message,"err");});
+}
+
+/* ── Bateaux ── */
+function renderGBateaux(){
+  var sel="";
+  BTYPES.forEach(function(t){
+    var active=(activeGBtype===t);
+    var cnt=(BATEAUX[t]||[]).length;
+    sel+='<button onclick="switchGBtype(this.dataset.t)" data-t="'+t+'" style="padding:4px 10px;border-radius:16px;border:2px solid '+(active?'var(--oar)':'var(--border)')+';background:'+(active?'color-mix(in srgb,var(--oar) 20%,transparent)':'transparent')+';color:'+(active?'var(--oar)':'var(--muted)')+';font-size:11px;font-weight:700;cursor:pointer">';
+    sel+=t+' <span style="opacity:.7">('+cnt+')</span></button>';
+  });
+  document.getElementById("btypeSelector").innerHTML=sel;
+  var list=BATEAUX[activeGBtype]||[];
+  var h="";
+  if(!list.length) h='<div style="color:var(--muted);font-size:11px;padding:8px 0">Aucun bateau pour ce type.</div>';
+  list.forEach(function(b,i){
+    h+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--hull);border:1px solid var(--border);border-radius:7px;margin-bottom:5px">';
+    h+='<span style="flex:1;font-size:12px;font-weight:600">'+xe(b)+'</span>';
+    h+='<button onclick="renameBateau('+i+')" style="border:none;background:transparent;cursor:pointer;color:var(--spray);font-size:13px;padding:2px 6px" title="Renommer">&#9998;</button>';
+    h+='<button onclick="removeBateau('+i+')" style="border:none;background:transparent;cursor:pointer;color:var(--coral);font-size:15px;padding:2px 6px;line-height:1" title="Supprimer">&times;</button>';
+    h+='</div>';
+  });
+  document.getElementById("bateauxList").innerHTML=h;
+}
+function switchGBtype(t){activeGBtype=t;renderGBateaux();}
+function addBateauItem(){
+  var inp=document.getElementById("newBateauInput");
+  var val=inp.value.trim();
+  if(!val) return;
+  if(!BATEAUX[activeGBtype]) BATEAUX[activeGBtype]=[];
+  if(BATEAUX[activeGBtype].indexOf(val)!==-1){flash("Ce bateau existe d&#233;j&#224;.","err");return;}
+  BATEAUX[activeGBtype].push(val);
+  inp.value="";
+  renderGBateaux();
+}
+function removeBateau(i){
+  if(!confirm("Supprimer ce bateau ?")) return;
+  BATEAUX[activeGBtype].splice(i,1);
+  renderGBateaux();
+}
+function renameBateau(i){
+  var ancien=(BATEAUX[activeGBtype]||[])[i];
+  var nouveau=prompt("Nouveau nom :",ancien);
+  if(!nouveau||nouveau.trim()===ancien) return;
+  BATEAUX[activeGBtype][i]=nouveau.trim();
+  renderGBateaux();
+}
+
+/* ── Avirons ── */
+function renderGAvirons(){
+  var h="";
+  if(!AVIRONS.length) h='<div style="color:var(--muted);font-size:11px;padding:8px 0">Aucune paire d&#x27;avirons.</div>';
+  AVIRONS.forEach(function(a,i){
+    h+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--hull);border:1px solid var(--border);border-radius:7px;margin-bottom:5px">';
+    h+='<span style="flex:1;font-size:12px;font-weight:600">'+xe(a)+'</span>';
+    h+='<button onclick="renameAviron('+i+')" style="border:none;background:transparent;cursor:pointer;color:var(--spray);font-size:13px;padding:2px 6px" title="Renommer">&#9998;</button>';
+    h+='<button onclick="removeAviron('+i+')" style="border:none;background:transparent;cursor:pointer;color:var(--coral);font-size:15px;padding:2px 6px;line-height:1" title="Supprimer">&times;</button>';
+    h+="</div>";
+  });
+  document.getElementById("avironsList").innerHTML=h;
+}
+function addAvironItem(){
+  var inp=document.getElementById("newAvironInput");
+  var val=inp.value.trim();
+  if(!val) return;
+  if(AVIRONS.indexOf(val)!==-1){flash("Cette paire existe d&#233;j&#224;.","err");return;}
+  AVIRONS.push(val);
+  inp.value="";
+  renderGAvirons();
+}
+function removeAviron(i){
+  if(!confirm("Supprimer cette paire ?")) return;
+  AVIRONS.splice(i,1);
+  renderGAvirons();
+}
+function renameAviron(i){
+  var ancien=AVIRONS[i];
+  var nouveau=prompt("Nouveau nom :",ancien);
+  if(!nouveau||nouveau.trim()===ancien) return;
+  AVIRONS[i]=nouveau.trim();
+  renderGAvirons();
+}
 
 
 function renderSummaryBateaux(){
