@@ -633,6 +633,9 @@ function elig(rower,course){
     if(eligCats.indexOf("U19")!==-1) return "up";
   }
 
+  // ── Jamais éligible aux courses Masters (U13/U15/U17/U19/U23) ──
+  if(course.master) return false;
+
   // ── U17 et U19 → Senior M ou W (course sans suffixe d'âge) ──
   // Une course "M" ou "W" senior a catM:["U23"] ou catW:["U23"] (ou ["U19","U23"])
   // On détecte : la course accepte U23 mais PAS U17 directement
