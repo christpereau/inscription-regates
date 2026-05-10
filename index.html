@@ -160,6 +160,19 @@ select option{background:var(--hull)}
 .parsed-time{color:var(--gold);min-width:55px;font-size:11px}
 .parsed-label{flex:1}
 .parsed-dist{color:var(--muted);font-size:10px;min-width:45px;text-align:right}
+.mspanel{position:fixed;inset:0;background:rgba(4,10,18,.9);z-index:600;display:none;align-items:center;justify-content:center;padding:16px}
+.mspanel.open{display:flex}
+.msbox{background:var(--navy);border:1px solid var(--border);border-radius:var(--r);padding:18px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto}
+.msttl{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:3px}
+.mssubt{font-size:11px;color:var(--muted);margin-bottom:12px}
+.msrow{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--hull);border-radius:7px;margin-bottom:5px;cursor:pointer;-webkit-tap-highlight-color:transparent;border:2px solid transparent;transition:border-color .15s}
+.msrow.sel{border-color:var(--oar);background:rgba(46,108,164,.15)}
+.msrow.dis{opacity:.35;pointer-events:none}
+.msav{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--hull),var(--oar));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#8ecae6;flex-shrink:0}
+.msck{width:20px;height:20px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;color:transparent}
+.msrow.sel .msck{background:var(--oar);border-color:var(--oar);color:#fff}
+.crew-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;background:color-mix(in srgb,var(--oar) 20%,transparent);border:1px solid var(--oar);border-radius:12px;font-size:11px;font-weight:600;cursor:pointer}
+.crew-chip:hover{background:color-mix(in srgb,var(--coral) 20%,transparent);border-color:var(--coral)}
 .import-comp-head{font-family:"Playfair Display",serif;font-size:14px;font-weight:700;color:var(--text);margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 </style>
 </head>
@@ -339,6 +352,19 @@ select option{background:var(--hull)}
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn boutline" onclick="closeGestionBateaux()">Fermer</button>
       <button class="btn bgold" id="btnSaveCatalog" onclick="saveCatalogAndClose()">&#10003; Sauvegarder bateaux &amp; avirons</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Panneau assignation équipage ══ -->
+<div class="mspanel" id="msPanel" onclick="if(event.target===this)closeMs()">
+  <div class="msbox">
+    <div class="msttl" id="msTtl">Assigner l'équipage</div>
+    <div class="mssubt" id="msSub"></div>
+    <div id="msList"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn bgold" style="flex:1" onclick="confirmMs()">&#10003; Confirmer</button>
+      <button class="btn boutline" onclick="closeMs()">Annuler</button>
     </div>
   </div>
 </div>
@@ -612,6 +638,15 @@ function elig(rower,course){
 
   // ── Jamais éligible aux courses Masters si non-Master ──
   if(course.master && cat!=="MM" && cat!=="MW") return false;
+
+  // ── Genre inconnu → éligible si catégorie correspond (M ou W) ──
+  if(g===null){
+    var eligM=catM.indexOf(cat)!==-1||(course.upM||[]).indexOf(cat)!==-1;
+    var eligW=catW.indexOf(cat)!==-1||(course.upW||[]).indexOf(cat)!==-1;
+    if(isOpen) return "normal";
+    if(eligM||eligW) return "normal";
+    return false;
+  }
 
   // ── Masters (MM / MW) ──
   // MM = hommes Master, MW = femmes Master
@@ -1184,6 +1219,112 @@ function saveAssignment(compId,code,field,value,slot){
   renderSummaryBateaux();
 }
 
+/* ══ Panneau assignation équipage ══ */
+var _ms={cid:"",code:"",slot:0,bs:1,sel:[]};
+
+function openMs(cid,code,slot,bs){
+  _ms={cid:cid,code:code,slot:slot,bs:bs,sel:[]};
+  // Pré-sélectionner l'équipage déjà assigné
+  var key=code+"__"+slot;
+  var sd=(assignments[cid]&&assignments[cid][key])||{};
+  for(var s=0;s<bs;s++){
+    var rid=sd["rowerId_"+s]||"";
+    if(rid) _ms.sel.push(rid);
+  }
+  renderMs();
+  document.getElementById("msPanel").classList.add("open");
+}
+function closeMs(){
+  document.getElementById("msPanel").classList.remove("open");
+  _ms={cid:"",code:"",slot:0,bs:1,sel:[]};
+}
+function renderMs(){
+  var comp=COMPS.find(function(x){return x.id===_ms.cid;});
+  var cr=comp?comp.courses.find(function(x){return x.c===_ms.code;}):null;
+  // Rameurs inscrits à cette course
+  var eligible=rowers.filter(function(r){
+    return regs[r.id]&&regs[r.id][_ms.cid]&&regs[r.id][_ms.cid].has(_ms.code);
+  });
+  // IDs déjà utilisés dans les AUTRES slots de cette course
+  var usedElsewhere=new Set();
+  if(assignments[_ms.cid]){
+    Object.keys(assignments[_ms.cid]).forEach(function(key){
+      var a=assignments[_ms.cid][key];
+      if(a.courseCode!==_ms.code) return;
+      var slotN=a.slot||0;
+      if(slotN===_ms.slot) return;
+      for(var s=0;s<_ms.bs;s++){
+        var rid=a["rowerId_"+s]||"";
+        if(rid) usedElsewhere.add(rid);
+      }
+    });
+  }
+  var sel=_ms.sel,seats=_ms.bs,isFull=(sel.length>=seats);
+  var label=cr?(cr.c+" "+cr.l):"Course";
+  document.getElementById("msTtl").textContent=label;
+  document.getElementById("msSub").textContent=sel.length+" équipier"+(sel.length>1?"s":"")+" sélectionné"+(sel.length>1?"s":"")+" / "+seats+" siège"+(seats>1?"s":"");
+  if(!eligible.length){
+    document.getElementById("msList").innerHTML="<div style='color:var(--muted);font-size:12px;padding:10px 0'>Aucun rameur inscrit.</div>";
+    return;
+  }
+  document.getElementById("msList").innerHTML=eligible.map(function(r){
+    var isSel=(sel.indexOf(r.id)>=0);
+    var taken=(usedElsewhere.has(r.id)&&!isSel);
+    var dis=((!isSel&&isFull)||taken)?" dis":"";
+    var g=genderOf(r);
+    return "<div class='msrow"+(isSel?" sel":"")+dis+"' data-rid='"+r.id+"' onclick='clickMs(this.dataset.rid)'>"
+      +"<div class='msav' style='color:"+(g==="M"?"#7eceff":"#ffb3d1")+"'>"+(g==="M"?"♂":"♀")+"</div>"
+      +"<div style='flex:1;min-width:0'><span style='font-size:13px;font-weight:600'>"+xe(r.name)+"</span>"
+      +(r.licence?"<span style='font-size:10px;color:var(--muted);font-family:monospace;margin-left:5px'>"+xe(r.licence)+"</span>":"")
+      +"<span class='cat-badge' style='margin-left:5px'>"+r.cat+"</span>"
+      +(taken?"<span style='font-size:9px;color:var(--muted);margin-left:5px'>✓ autre bateau</span>":"")+"</div>"
+      +"<div class='msck'>"+(isSel?"&#10003;":"")+"</div>"
+      +"</div>";
+  }).join("");
+}
+function clickMs(rid){
+  var idx=_ms.sel.indexOf(rid);
+  if(idx>=0){_ms.sel.splice(idx,1);}
+  else{
+    if(_ms.sel.length>=_ms.bs){flash("Maximum "+_ms.bs+" équipier"+(+_ms.bs>1?"s":"")+" pour ce bateau.","err");return;}
+    _ms.sel.push(rid);
+  }
+  renderMs();
+}
+function confirmMs(){
+  var cid=_ms.cid,code=_ms.code,slot=_ms.slot,bs=_ms.bs;
+  if(!assignments[cid]) assignments[cid]={};
+  var key=code+"__"+slot;
+  if(!assignments[cid][key]) assignments[cid][key]={bateau:"",aviron:"",slot:slot,courseCode:code};
+  // Effacer anciens sièges
+  for(var s=0;s<bs;s++) assignments[cid][key]["rowerId_"+s]="";
+  // Assigner les sélectionnés
+  _ms.sel.forEach(function(rid,i){ assignments[cid][key]["rowerId_"+i]=rid; });
+  // Sauvegarder dans Firebase
+  var doc=cid+"_"+code+"_s"+slot;
+  db.collection("regata_assignments").doc(doc).set(
+    Object.assign({compId:cid,courseCode:code,slot:slot},assignments[cid][key]),
+    {merge:true}
+  );
+  closeMs();
+  renderBateaux();
+}
+function removeCrewMember(cid,code,slot,rid){
+  if(!assignments[cid]) return;
+  var key=code+"__"+slot;
+  if(!assignments[cid][key]) return;
+  var sd=assignments[cid][key];
+  // Trouver et vider le siège
+  for(var s=0;s<10;s++){
+    if(sd["rowerId_"+s]===rid){sd["rowerId_"+s]="";break;}
+  }
+  var doc=cid+"_"+code+"_s"+slot;
+  db.collection("regata_assignments").doc(doc).set(
+    Object.assign({compId:cid,courseCode:code,slot:slot},sd),{merge:true}
+  );
+  renderBateaux();
+}
+
 var activeBateauxComp=null;
 function switchBateauxComp(id){activeBateauxComp=id;renderBateaux();}
 
@@ -1262,21 +1403,31 @@ function renderBateaux(){
       // Label slot
       h+='<div style="font-size:10px;font-weight:700;color:var(--spray);width:100%;padding-bottom:4px;border-bottom:1px solid var(--border);margin-bottom:2px">'+(nbSlots>1?"Bateau "+(s+1)+" / "+nbSlots:"Bateau")+'</div>';
 
-      // Sélection rameurs : boatSize selects (un par siège)
-      h+='<div style="flex:2;min-width:180px">';
-      h+='<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Rameurs ('+boatSize+' siège'+(boatSize>1?"s":"")+')</div>';
-      h+='<div style="display:flex;flex-direction:column;gap:4px">';
+      // Équipage : chips + bouton Assigner (sans select, sans rechargement)
+      var crewIds=[];
       for(var seat=0;seat<boatSize;seat++){
-        var seatField="rowerId_"+seat;
-        var seatVal=(sd[seatField]||"");
-        h+='<select class="assign-select" data-cid="'+comp.id+'" data-code="'+cr.c+'" data-field="'+seatField+'" data-slot="'+s+'" onchange="saveAssignment(this.dataset.cid,this.dataset.code,this.dataset.field,this.value,+this.dataset.slot)" style="width:100%;font-size:11px">';
-        h+='<option value="">Siège '+(seat+1)+(boatSize===1?"":" / "+boatSize)+' — Rameur...</option>';
-        registeredRowers.forEach(function(r){
-          h+='<option value="'+r.id+'"'+(seatVal===r.id?' selected':'')+'>'+xe(r.name)+(r.licence?' · '+xe(r.licence):'')+'</option>';
-        });
-        h+='</select>';
+        var rid=(sd["rowerId_"+seat]||"");
+        if(rid) crewIds.push(rid);
       }
-      h+='</div></div>';
+      h+='<div style="flex:2;min-width:180px">';
+      h+='<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Équipage ('+crewIds.length+'/'+boatSize+')</div>';
+      h+='<div style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-bottom:6px">';
+      crewIds.forEach(function(rid){
+        var r=rowers.find(function(x){return x.id===rid;});
+        if(!r) return;
+        var g=genderOf(r);
+        h+='<span class="crew-chip" data-cid="'+comp.id+'" data-code="'+cr.c+'" data-slot="'+s+'" data-rid="'+rid+'" onclick="removeCrewMember(this.dataset.cid,this.dataset.code,+this.dataset.slot,this.dataset.rid)" title="Cliquer pour retirer">';
+        h+='<span style="font-size:9px;color:'+(g==="M"?"#7eceff":"#ffb3d1")+'">'+(g==="M"?"♂":"♀")+'</span>';
+        h+=xe(r.name);
+        if(r.licence) h+=' <span style="font-size:9px;font-family:monospace;opacity:.7">'+xe(r.licence)+'</span>';
+        h+='</span>';
+      });
+      if(crewIds.length===0) h+='<span style="font-size:11px;color:var(--muted);font-style:italic">Aucun équipier assigné</span>';
+      h+='</div>';
+      h+='<button class="btn boutline" style="font-size:11px" data-cid="'+comp.id+'" data-code="'+cr.c+'" data-slot="'+s+'" data-bs="'+boatSize+'" onclick="openMs(this.dataset.cid,this.dataset.code,+this.dataset.slot,+this.dataset.bs)">';
+      h+=crewIds.length>0?"&#9998; Modifier l'équipage":"+ Assigner l'équipage";
+      h+='</button>';
+      h+='</div>';
 
       // Select bateau
       h+='<div style="flex:1;min-width:140px">';
@@ -1312,10 +1463,10 @@ function renderBateaux(){
 function genderOf(rower){
   if(rower.gender) return rower.gender;
   if(G[rower.id]) return G[rower.id];
-  // Déduire depuis la catégorie : "W" dans catM/catW ou cat contient W
   var c=rower.cat||"";
-  if(c==="MW"||c==="W"||c.indexOf("W")===0) return "W";
-  return "M";
+  if(c==="MW"||c==="LW"||c==="W") return "W";
+  if(c==="MM"||c==="LM"||c==="M") return "M";
+  return null;
 }
 
 
@@ -1358,7 +1509,7 @@ function renderGRameurs(){
     h='<div style="color:var(--muted);font-size:11px;padding:8px 0">Aucun rameur dans Firebase.</div>';
   }
   rowers.forEach(function(rower){
-    var g=rowegenderOf(r);
+    var g=genderOf(rower);
     var cc="cu"+(rower.cat||"").toLowerCase().replace("u","");
     h+='<div style="display:flex;align-items:center;gap:7px;padding:5px 8px;background:var(--hull);border:1px solid var(--border);border-radius:7px;margin-bottom:5px;flex-wrap:wrap">';
     h+='<span style="font-size:10px;color:'+(g==="M"?"#7eceff":"#ffb3d1")+'">'+(g==="M"?"&#9794;":"&#9792;")+'</span>';
