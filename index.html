@@ -1069,6 +1069,27 @@ function purgeOrphanRegs(){
       });
     });
   });
+  // Purger aussi les assignments orphelins (bateau/aviron assigné mais aucun rameur inscrit à la course)
+  if(assignments){
+    Object.keys(assignments).forEach(function(compId){
+      var comp=COMPS.find(function(x){return x.id===compId;});
+      if(!comp) return;
+      Object.keys(assignments[compId]).forEach(function(key){
+        var a=assignments[compId][key];
+        var code=a.courseCode||key.split("__")[0];
+        var slot=a.slot||0;
+        var hasRower=rowers.some(function(r){
+          return regs[r.id]&&regs[r.id][compId]&&regs[r.id][compId].has(code);
+        });
+        if(!hasRower){
+          var docId=compId+"__"+code+"__"+slot;
+          batch.delete(db.collection("regata_assignments").doc(docId));
+          delete assignments[compId][key];
+          count++;
+        }
+      });
+    });
+  }
   if(count===0){flash("Aucune inscription à purger.","ok");return;}
   batch.commit().then(function(){
     flash("Purgé : "+count+" inscription"+(count>1?"s":"")+" ✓","ok");
